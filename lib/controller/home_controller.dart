@@ -17,7 +17,6 @@ class HomeController extends ChangeNotifier{
       notifyListeners();
     }
   }
-
   lightModeFun() {
     if (darkMode) {
       darkMode = false;
@@ -25,17 +24,22 @@ class HomeController extends ChangeNotifier{
       notifyListeners();
     }
   }
-
   setModeToSP(val) async{
     SharedPreferences sp = await SharedPreferences.getInstance();
     sp.setBool(AppConstance.mode, val);
   }
+  Future<void> getModeFromSP() async{
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    darkMode = sp.getBool(AppConstance.mode)??false;
+  }
 
   //result
   void addToFormula(dynamic text) {
-    formulaSize = 50.0;
-    resultSize = 22.0;
-    formula = "$formula$text";
+    if(formula.length < 25){
+      formulaSize = 50.0;
+      resultSize = 22.0;
+      formula = "$formula$text";
+    }
     notifyListeners();
   }
   void clear(){

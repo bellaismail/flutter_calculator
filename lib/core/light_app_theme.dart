@@ -9,6 +9,7 @@ class LightAppTheme {
     return ThemeData(
       scaffoldBackgroundColor: AppConstance.lightBackground,
       highlightColor: AppConstance.lightButtonColor,
+
       primaryColor: AppConstance.lightBottomBackground,
       textTheme: TextTheme(
         //formula and result

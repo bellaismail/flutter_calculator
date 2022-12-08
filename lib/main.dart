@@ -12,38 +12,41 @@ void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-
-  bool? darkMode;
-  Future<void> getModeFromSP() async{
-    SharedPreferences sp = await SharedPreferences.getInstance();
-    darkMode = sp.getBool(AppConstance.mode)??false;
-  }
-  @override
-  void initState() {
-    getModeFromSP();
-    super.initState();
-  }
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => HomeController(),
-      builder: (context, child) => MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
-        theme: Provider.of<HomeController>(context).darkMode
-            ? DarkAppTheme.darkAppThemeData()
-            : LightAppTheme.lightAppThemeData(),
-        home: const HomeScreen(),
-      ),
+      builder: (context, child) => const MaterialWidget(),
     );
   }
 }
+
+class MaterialWidget extends StatefulWidget {
+  const MaterialWidget({Key? key}) : super(key: key);
+
+  @override
+  State<MaterialWidget> createState() => _MaterialWidgetState();
+}
+
+class _MaterialWidgetState extends State<MaterialWidget> {
+  @override
+  void initState() {
+    var provider = Provider.of<HomeController>(context, listen: false);
+    provider.getModeFromSP();
+    super.initState();
+  }
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Flutter Demo',
+      theme: Provider.of<HomeController>(context).darkMode
+          ? DarkAppTheme.darkAppThemeData()
+          : LightAppTheme.lightAppThemeData(),
+      home: const HomeScreen(),
+    );
+  }
+}
+

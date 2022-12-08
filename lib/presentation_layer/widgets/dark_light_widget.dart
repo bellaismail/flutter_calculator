@@ -29,12 +29,13 @@ class DarkAndLightWidget extends StatelessWidget {
           children: [
             IconButtonWidget(
               onPressed: lightOnPressed,
-              iconColor: darkMode? const Color(0xff6D7078) :Colors.white,
+              iconColor: darkMode? Colors.grey: Theme.of(context).textTheme.labelSmall!.color!,
               icon: Icons.light_mode_rounded,
             ),
             IconButtonWidget(
               onPressed: darkOnPressed,
-              iconColor: darkMode? Colors.white : const Color(0xff6D7078),
+              // iconColor: darkMode? Colors.white : const Color(0xff6D7078),
+              iconColor: darkMode? Theme.of(context).textTheme.labelSmall!.color!: Colors.grey,
               icon: FontAwesomeIcons.moon,
             ),
           ],
