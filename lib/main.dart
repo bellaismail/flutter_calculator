@@ -14,6 +14,7 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -31,22 +32,30 @@ class MaterialWidget extends StatefulWidget {
 }
 
 class _MaterialWidgetState extends State<MaterialWidget> {
-  @override
-  void initState() {
-    var provider = Provider.of<HomeController>(context, listen: false);
-    provider.getModeFromSP();
-    super.initState();
-  }
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: Provider.of<HomeController>(context).darkMode
-          ? DarkAppTheme.darkAppThemeData()
-          : LightAppTheme.lightAppThemeData(),
-      home: const HomeScreen(),
-    );
+    var provider = Provider.of<HomeController>(context);
+    return FutureBuilder(
+        future: provider.getModeFromSP(),
+        builder: (context, AsyncSnapshot<bool> snapshot){
+      if(snapshot.hasData){
+        return Selector<HomeController, bool>(
+          selector: (context, prov) => prov.darkMode,
+          builder: (context, provider, child) {
+            return MaterialApp(
+              debugShowCheckedModeBanner: false,
+              title: 'Flutter Demo',
+              theme: snapshot.data!
+                  ? DarkAppTheme.darkAppThemeData()
+                  : LightAppTheme.lightAppThemeData(),
+              home: const HomeScreen(),
+            );
+          },
+        );
+      }else{
+        return const Center(child: CircularProgressIndicator(),);
+      }
+    });
   }
 }
-

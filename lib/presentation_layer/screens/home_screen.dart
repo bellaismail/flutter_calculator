@@ -3,10 +3,23 @@ import 'package:calculator_project/core/app_constance.dart';
 import 'package:calculator_project/presentation_layer/widgets/dark_light_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../widgets/button_widget.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    var provider = Provider.of<HomeController>(context, listen: false);
+    provider.getModeFromSP();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,13 +34,24 @@ class HomeScreen extends StatelessWidget {
         body: Column(
           children: [
             const SizedBox(height: 20.0),
-            DarkAndLightWidget(
-              darkMode: provider.darkMode,
-              darkOnPressed: () {
-                provider.darkModeFun();
-              },
-              lightOnPressed: () {
-                provider.lightModeFun();
+            FutureBuilder(
+              future: provider.getModeFromSP(),
+              builder: (context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData) {
+                  return DarkAndLightWidget(
+                    darkMode: snapshot.data,
+                    darkOnPressed: () {
+                      provider.darkModeFun();
+                    },
+                    lightOnPressed: () {
+                      provider.lightModeFun();
+                    },
+                  );
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
               },
             ),
             Consumer<HomeController>(
@@ -43,11 +67,15 @@ class HomeScreen extends StatelessWidget {
                         const Expanded(child: SizedBox()),
                         Text(
                           provider.formula,
-                          style: Theme.of(context).textTheme.displayMedium,
+                          style: provider.result == null
+                              ? Theme.of(context).textTheme.displayLarge
+                              : Theme.of(context).textTheme.displayMedium,
                         ),
                         Text(
                           provider.result?.toStringAsFixed(3) ?? "",
-                          style: Theme.of(context).textTheme.displayLarge,
+                          style: provider.result == null
+                              ? Theme.of(context).textTheme.displayMedium
+                              : Theme.of(context).textTheme.displayLarge,
                         ),
                       ],
                     ),

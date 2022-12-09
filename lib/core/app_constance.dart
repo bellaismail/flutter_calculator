@@ -20,5 +20,5 @@ class AppConstance{
   static const List bottomList = ["removeLastItem", "0", "."];
   static const List numberList = [7, 8, 9, 4, 5, 6, 1, 2, 3];
   //theme
-static const mode = "DarkMode";
+  static const mode = "DarkMode";
 }

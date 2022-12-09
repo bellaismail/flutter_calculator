@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:math_expressions/math_expressions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 class HomeController extends ChangeNotifier{
+  SharedPreferences? sharedPreferences;
+  HomeController({this.sharedPreferences});
   String formula = "";
   double? result;
   double formulaSize = 22.0;
@@ -10,14 +12,16 @@ class HomeController extends ChangeNotifier{
   bool darkMode = false;
 
   //themeFun
-  darkModeFun(){
+  darkModeFun()async{
+    bool darkMode = await getModeFromSP();
     if(!darkMode){
       darkMode = true;
       setModeToSP(true);
       notifyListeners();
     }
   }
-  lightModeFun() {
+  lightModeFun() async{
+    bool darkMode = await getModeFromSP();
     if (darkMode) {
       darkMode = false;
       setModeToSP(false);
@@ -28,9 +32,10 @@ class HomeController extends ChangeNotifier{
     SharedPreferences sp = await SharedPreferences.getInstance();
     sp.setBool(AppConstance.mode, val);
   }
-  Future<void> getModeFromSP() async{
+  Future<bool> getModeFromSP() async{
     SharedPreferences sp = await SharedPreferences.getInstance();
-    darkMode = sp.getBool(AppConstance.mode)??false;
+    bool darkMode = sp.getBool(AppConstance.mode)??false;
+    return darkMode;
   }
 
   //result
